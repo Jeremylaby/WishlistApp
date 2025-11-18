@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: wishlist/auth/postgres:16
+    restart: unless-stopped
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: ${AUTH_DB}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U auth_user -d auth_db" ]
+      interval: 5s      # co ile sprawdzać
+      timeout: 3s       # ile czekać na odpowiedź
+      retries: 10       # po ilu nieudanych próbach uznać, że jest unhealthy
+      start_period: 10s # czas na spokojny start zanim zacznie oceniać
+
+volumes:
+  auth-db-data:

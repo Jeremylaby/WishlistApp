@@ -1,0 +1,15 @@
+server:
+  port: ${AUTH_SERVICE_PORT}
+
+spring:
+  datasource:
+    url: ${AUTH_DB_URL}
+    username: ${AUTH_DB_USER}
+    password: ${AUTH_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${AUTH_JPA_DDL_AUTO}
+    show-sql: ${AUTH_JPA_SHOW_SQL}
+    properties:
+      hibernate:
+        format_sql: true
