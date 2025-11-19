@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   auth-db:
-    image: wishlist/auth/postgres:16
+    image: postgres:16
     restart: unless-stopped
     container_name: auth-db
     environment:
