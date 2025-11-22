@@ -2,9 +2,12 @@ package org.example.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.events.UserRegisteredEvent;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.repository.UserRepository;
+import org.example.service.CustomUserDetailsService;
+import org.example.service.UserEventProducerService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class AdminUserSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final UserEventProducerService userEventProducerService;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${ADMIN_EMAIL}")
@@ -58,6 +62,7 @@ public class AdminUserSeeder implements CommandLineRunner {
                 .build();
 
         userRepository.save(admin);
+        userEventProducerService.sendUserRegisteredEvent(UserRegisteredEvent.fromUser(admin));
         log.info("Utworzono użytkownika ADMIN: {}", adminEmail);
     }
 }

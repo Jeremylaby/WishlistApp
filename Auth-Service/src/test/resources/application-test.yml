@@ -18,10 +18,16 @@ spring:
   sql:
     init:
       mode: never
+  kafka:
+    bootstrap-servers: localhost:9092
+
   data:
     redis:
       host: localhost
       port: 6379
+
+
+
 
 ADMIN_EMAIL: test-admin@example.com
 ADMIN_USERNAME: test_admin

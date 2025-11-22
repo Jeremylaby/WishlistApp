@@ -30,10 +30,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody @Valid RegisterRequest req, HttpServletRequest request)
-            throws ServletException {
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid RegisterRequest req) {
         UserDTO dto = customUserDetailsService.register(req);
-        request.login(req.getUsername(), req.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
