@@ -10,8 +10,8 @@ public record UserDTO(
     Long id,
     String email,
     String username,
-    String firstname,
-    String lastname,
+    String firstName,
+    String lastName,
     LocalDate birthDate,
     LocalDate nameDay,
     Role role
@@ -21,8 +21,8 @@ public record UserDTO(
                 .id(user.getId())
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .firstname(user.getFirstName())
-                .lastname(user.getLastName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .birthDate(user.getBirthDate())
                 .nameDay(user.getNameDay())
                 .role(user.getRole())

@@ -17,6 +17,25 @@ public final class GlobalExceptionHandler {
         return errorResponse("username", ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<?> handleEmailNotFound(EmailNotFoundException ex) {
+        return errorResponse("email", ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex) {
+        return errorResponse("username", ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExists.class)
+    public ResponseEntity<?> handleUsernameAlreadyExists(UsernameAlreadyExists ex) {
+        return errorResponse("username", ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<?> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+        return errorResponse("email", ex.getMessage(), HttpStatus.CONFLICT);
+    }
 
 
 

@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .permitAll()
                         // albo wywalcie te 2 linie bo to ustawia że wszystkie inne endpointy wymagają auth
                         .requestMatchers("/admin/**")
-                        .hasAnyRole("ADMIN", "OWNER")
+                        .hasAnyRole("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .exceptionHandling(
@@ -67,13 +67,12 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout.logoutUrl("/auth/logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("WISHLISTSESSION")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.getWriter().write("{\"message\": \"Logout successful\"}");
                             response.getWriter().flush();
-                        }))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+                        }));
 
         return http.build();
     }

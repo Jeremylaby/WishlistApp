@@ -1,5 +1,9 @@
 server:
   port: ${AUTH_SERVICE_PORT}
+  servlet:
+    session:
+      cookie:
+        name: WISHLISTSESSION
 
 spring:
   datasource:
@@ -13,3 +17,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: redis
+      port: 6379

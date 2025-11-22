@@ -4,6 +4,9 @@ package org.example.service;
 import jakarta.transaction.Transactional;
 import org.example.dto.UserDTO;
 import org.example.dto.request.RegisterRequest;
+import org.example.exception.EmailAlreadyExistsException;
+import org.example.exception.EmailNotFoundException;
+import org.example.exception.UsernameAlreadyExists;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.repository.UserRepository;
@@ -37,14 +40,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDTO register(RegisterRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new UsernameNotFoundException("Username already exists");
+            throw new UsernameAlreadyExists(request.getUsername());
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new UsernameNotFoundException("Email already exists");
+            throw new EmailAlreadyExistsException(request.getEmail());
         }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
