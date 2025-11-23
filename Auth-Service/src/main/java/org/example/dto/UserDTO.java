@@ -1,21 +1,20 @@
 package org.example.dto;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import org.example.model.Role;
 import org.example.model.User;
 
-import java.time.LocalDate;
 @Builder
 public record UserDTO(
-    Long id,
-    String email,
-    String username,
-    String firstName,
-    String lastName,
-    LocalDate birthDate,
-    LocalDate nameDay,
-    Role role
-) {
+        Long id,
+        String email,
+        String username,
+        String firstName,
+        String lastName,
+        LocalDate birthDate,
+        LocalDate nameDay,
+        Role role) {
     public static UserDTO fromUser(User user) {
         return UserDTO.builder()
                 .id(user.getId())

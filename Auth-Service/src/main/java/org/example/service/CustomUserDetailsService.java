@@ -1,12 +1,10 @@
 package org.example.service;
 
-
 import jakarta.transaction.Transactional;
 import org.example.dto.UserDTO;
 import org.example.dto.request.RegisterRequest;
 import org.example.events.UserRegisteredEvent;
 import org.example.exception.EmailAlreadyExistsException;
-import org.example.exception.EmailNotFoundException;
 import org.example.exception.UsernameAlreadyExists;
 import org.example.model.Role;
 import org.example.model.User;
@@ -23,7 +21,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserEventProducerService userEventProducerService;
 
-    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserEventProducerService userEventProducerService) {
+    public CustomUserDetailsService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            UserEventProducerService userEventProducerService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userEventProducerService = userEventProducerService;
@@ -62,5 +63,4 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return UserDTO.fromUser(user);
     }
-
 }

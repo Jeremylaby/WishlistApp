@@ -10,17 +10,18 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
+# UWAGA: jeśli chcesz commitować własne .jar-y, usuń tę linię
+*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-
 ### Gradle ###
 .gradle
 /build/
+*/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -31,9 +32,41 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
 # End of https://www.gitignore.io/api/java,gradle
-.idea
+
+### IDE / EDITORS ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### OS SPECIFIC ###
+.DS_Store
+Thumbs.db
+
+### LOGS ###
+logs/
+*.log
+
+### NODE / HUSKY / FRONT-END TOOLS ###
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# NIE ignoruj hooków ani konfiguracji narzędzi:
+!.husky/
+!package.json
+!package-lock.json
+
+### ENV / SECRETY ###
+# prywatne env-y
 .env
+.env.*
+# ale zostaw przykładowe pliki w repo
+!.example.env
+!*.example.env
+
+### TESTY / COVERAGE (na przyszłość) ###
+coverage/
+.testResults/

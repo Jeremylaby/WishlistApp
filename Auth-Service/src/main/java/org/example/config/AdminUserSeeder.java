@@ -6,7 +6,6 @@ import org.example.events.UserRegisteredEvent;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.repository.UserRepository;
-import org.example.service.CustomUserDetailsService;
 import org.example.service.UserEventProducerService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -40,8 +39,7 @@ public class AdminUserSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // Jeśli nie ustawiono wymaganych zmiennych – pomijamy seeding
-        if (adminEmail == null || adminEmail.isBlank()
-                || adminPassword == null || adminPassword.isBlank()) {
+        if (adminEmail == null || adminEmail.isBlank() || adminPassword == null || adminPassword.isBlank()) {
             log.warn("Admin seeding skipped: ADMIN_EMAIL lub ADMIN_PASSWORD nie są ustawione.");
             return;
         }
@@ -66,4 +64,3 @@ public class AdminUserSeeder implements CommandLineRunner {
         log.info("Utworzono użytkownika ADMIN: {}", adminEmail);
     }
 }
-

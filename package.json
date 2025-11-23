@@ -1,0 +1,15 @@
+{
+  "name": "wishlistapp",
+  "version": "1.0.0",
+  "description": "1. Przed uruchomieniem\r    1.1. Uzupełnij plik `.env` na podstawie pliku `.example.env`.\r    1.2. Upewnij się, że w katalogu z `docker-compose.yml` znajdują się pliki:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

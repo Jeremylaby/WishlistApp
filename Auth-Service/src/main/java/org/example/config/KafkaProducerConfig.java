@@ -17,9 +17,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, UserDeleteEvent> userDeleteTemplate(
-            ProducerFactory<String, UserDeleteEvent> pf) {
+    public KafkaTemplate<String, UserDeleteEvent> userDeleteTemplate(ProducerFactory<String, UserDeleteEvent> pf) {
         return new KafkaTemplate<>(pf);
     }
-
 }

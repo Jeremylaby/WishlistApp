@@ -1,0 +1,7 @@
+git diff --cached --name-only | grep -q "^Auth-Service/" || exit 0
+echo "Uruchamianie Spotless do formatowania kodu Java..."
+cd Auth-Service || exit 1
+./gradlew spotlessApply || exit 1
+cd ..
+# Dodaj zmiany automatycznie, jeśli coś się zmieniło
+git diff --cached --name-only --diff-filter=ACM| xargs git add

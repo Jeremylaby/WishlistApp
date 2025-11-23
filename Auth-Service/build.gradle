@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
-
-
+    id 'checkstyle'
+    id 'com.diffplug.spotless' version '7.0.3'
 }
 
 group = 'org.example'
@@ -11,6 +11,35 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+spotless {
+    java {
+        importOrder()
+        removeUnusedImports()
+        cleanthat()
+        palantirJavaFormat().formatJavadoc(true)
+    }
+}
+checkstyle {
+    toolVersion = "10.12.4"
+    configFile = file("config/checkstyle/checkstyle.xml")
+}
+checkstyleMain {
+    source ='src/main/java'
+}
+checkstyleTest {
+    source ='src/test/java'
 }
 
 dependencies {

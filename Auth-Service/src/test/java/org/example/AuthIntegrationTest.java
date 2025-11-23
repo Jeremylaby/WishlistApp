@@ -1,5 +1,11 @@
 package org.example;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.example.model.Role;
@@ -12,27 +18,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-@EmbeddedKafka(partitions = 1, brokerProperties = {
-        "listeners=PLAINTEXT://localhost:9092",
-        "port=9092"
-})
+@EmbeddedKafka(
+        partitions = 1,
+        brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class AuthIntegrationTest {
 
     @Autowired
@@ -44,11 +43,10 @@ class AuthIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     @Test
     void shouldRegisterUserSuccessfully() throws Exception {
-        String body = """
+        String body =
+                """
             {
               "username": "TestUser1",
               "email": "register_success@example.com",
@@ -76,7 +74,8 @@ class AuthIntegrationTest {
                 .build();
         userRepository.save(existing);
 
-        String body = """
+        String body =
+                """
             {
               "username": "TestUser2",
               "email": "new_email@example.com",
@@ -90,8 +89,7 @@ class AuthIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.errorField")
-                        .value("username"));
+                .andExpect(jsonPath("$.errorField").value("username"));
     }
 
     @Test
@@ -106,7 +104,8 @@ class AuthIntegrationTest {
                 .build();
         userRepository.save(existing);
 
-        String body = """
+        String body =
+                """
             {
               "username": "TestUser4",
               "email": "duplicate@example.com",
@@ -120,8 +119,7 @@ class AuthIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.errorField")
-                        .value("email"));
+                .andExpect(jsonPath("$.errorField").value("email"));
     }
 
     @Test
@@ -143,8 +141,7 @@ class AuthIntegrationTest {
                         .param("username", "LoginUser")
                         .param("password", rawPassword))
                 .andExpect(status().isOk())
-                .andExpect(content()
-                        .json("{\"message\":\"Login successful\"}"));
+                .andExpect(content().json("{\"message\":\"Login successful\"}"));
     }
 
     @Test
@@ -165,8 +162,7 @@ class AuthIntegrationTest {
                         .param("username", "LoginFail")
                         .param("password", "ZleHaslo999!"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content()
-                        .json("{\"error\":\"Invalid credentials\"}"));
+                .andExpect(content().json("{\"error\":\"Invalid credentials\"}"));
     }
 
     @Test
@@ -176,10 +172,10 @@ class AuthIntegrationTest {
                 .andExpect(content().json("{\"error\": \"Unauthorized\"}"));
     }
 
-
     @Test
     void checkAuthShouldReturnSameUserAsInSession() throws Exception {
-        String registerBody = """
+        String registerBody =
+                """
     {
       "username": "check_user",
       "password": "Haslo123!",
@@ -212,11 +208,10 @@ class AuthIntegrationTest {
                 .andExpect(jsonPath("$.lastName").value("Kowalski"));
     }
 
-
-
     @Test
     void logoutShouldInvalidateSessionAndThenCheckReturnsUnauthorized() throws Exception {
-        String body = """
+        String body =
+                """
         {
           "username": "logout_user",
           "password": "Haslo123!",
@@ -255,12 +250,10 @@ class AuthIntegrationTest {
                 .andExpect(jsonPath("$.error").value("Unauthorized"));
     }
 
-
     @Test
     void logout_withoutSessionShouldStillReturnOk() throws Exception {
         mockMvc.perform(post("/auth/logout"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message")
-                        .value("Logout successful"));
+                .andExpect(jsonPath("$.message").value("Logout successful"));
     }
 }
