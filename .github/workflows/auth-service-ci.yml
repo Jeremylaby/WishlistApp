@@ -1,0 +1,43 @@
+name: Auth-Service CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "../../Auth-Service"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Auth-Service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle (cache)
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run tests (with Testcontainers)
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: ./gradlew clean test
+
+      - name: Run Spotless
+        run: ./gradlew spotlessCheck
+      - name: Run Checkstyle
+        run: ./gradlew checkstyleMain
+
