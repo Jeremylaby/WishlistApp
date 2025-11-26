@@ -1,0 +1,98 @@
+
+services:
+  auth-service:
+    build: ./Auth-Service
+    container_name: auth-service
+    depends_on:
+      - auth-db
+      - redis
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+      AUTH_SERVICE_PORT: 8080
+
+      # DB – wewnątrz dockera używamy osobnego URL-a (host = auth-db)
+      AUTH_DB_URL: ${AUTH_DB_DOCKER_URL}
+      AUTH_DB_USER: ${AUTH_DB_USER}
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
+      AUTH_JPA_DDL_AUTO: ${AUTH_JPA_DDL_AUTO}
+      AUTH_JPA_SHOW_SQL: ${AUTH_JPA_SHOW_SQL}
+
+      # Redis – nazwa hosta i port też z .env
+      AUTH_REDIS_HOST: ${AUTH_REDIS_HOST}
+      AUTH_REDIS_PORT: ${AUTH_REDIS_PORT}
+
+      # Kafka – w dockerze łączymy się po nazwie serwisu "kafka"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS_DOCKER}
+
+      # nazwa cookie sesji jako zmienna
+      AUTH_SESSION_COOKIE_NAME: ${AUTH_SESSION_COOKIE_NAME}
+
+      # admin seeder
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME}
+      ADMIN_LAST_NAME: ${ADMIN_LAST_NAME}
+
+  auth-db:
+    image: postgres:16
+    restart: unless-stopped
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: ${AUTH_DB}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U auth_user -d auth_db" ]
+      interval: 5s      # co ile sprawdzać
+      timeout: 3s       # ile czekać na odpowiedź
+      retries: 10       # po ilu nieudanych próbach uznać, że jest unhealthy
+      start_period: 10s # czas na spokojny start zanim zacznie oceniać
+  redis:
+    image: redis:7
+    container_name: wishlist-redis
+    ports:
+      - "6379:6379"
+  kafka:
+    image: apache/kafka:latest
+    container_name: wishlist-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # Enable KRaft mode
+      KAFKA_KRAFT_MODE: "true"
+
+      # Cluster and node settings
+      CLUSTER_ID: "123-H1wort-43-1XLr"      # you can keep or change this
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+
+      # Listeners (inside the container)
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+
+      # How the broker advertises itself to clients
+      # If your producer runs on the host machine, localhost is fine:
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+
+      # Logs
+      KAFKA_LOG_DIRS: "/tmp/kraft-logs"
+
+      # Optional: internal defaults you had
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    volumes:
+      - kafka_kraft:/var/lib/kafka/data
+
+volumes:
+  auth-db-data:
+  kafka_kraft:

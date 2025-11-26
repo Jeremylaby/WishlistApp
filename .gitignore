@@ -1,8 +1,7 @@
-# Compiled class file
-*.class
+# Created by https://www.gitignore.io/api/java,gradle
 
-# Log file
-*.log
+### Java ###
+*.class
 
 # BlueJ files
 *.ctxt
@@ -11,14 +10,63 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
+# UWAGA: jeśli chcesz commitować własne .jar-y, usuń tę linię
+*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-replay_pid*
+
+### Gradle ###
+.gradle
+/build/
+*/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# End of https://www.gitignore.io/api/java,gradle
+
+### IDE / EDITORS ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### OS SPECIFIC ###
+.DS_Store
+Thumbs.db
+
+### LOGS ###
+logs/
+*.log
+
+### NODE / HUSKY / FRONT-END TOOLS ###
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# NIE ignoruj hooków ani konfiguracji narzędzi:
+!.husky/
+!package.json
+!package-lock.json
+
+### ENV / SECRETY ###
+# prywatne env-y
+.env
+.env.*
+# ale zostaw przykładowe pliki w repo
+!.example.env
+!*.example.env
+
+### TESTY / COVERAGE (na przyszłość) ###
+coverage/
+.testResults/
