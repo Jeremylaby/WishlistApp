@@ -6,7 +6,7 @@ on:
       - main
       - develop
     paths:
-      - "../../Auth-Service"
+      - "Auth-Service/**"
 
 jobs:
   build-and-test:
