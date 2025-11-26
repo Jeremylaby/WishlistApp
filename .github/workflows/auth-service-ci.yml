@@ -2,6 +2,9 @@ name: Auth-Service CI
 
 on:
   pull_request:
+    branches:
+      - main
+      - develop
     paths:
       - "../../Auth-Service"
 
