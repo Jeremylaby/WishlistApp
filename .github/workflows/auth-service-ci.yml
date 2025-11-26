@@ -3,7 +3,7 @@ name: Auth-Service CI
 on:
   pull_request:
     paths:
-      - "Auth-Service/**"
+      - "../../Auth-Service"
 
 jobs:
   build-and-test:
