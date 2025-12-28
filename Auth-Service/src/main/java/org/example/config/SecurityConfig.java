@@ -1,7 +1,9 @@
 package org.example.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import org.example.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,24 +26,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final List<String> allowedOrigins;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(
+            CustomUserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder,
+            @Value("${SPRING_ALLOWED_ORIGINS}") String allowedOrigins) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.allowedOrigins = List.of(allowedOrigins.split(","));
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                /*
-                tu są rzeczy które nie wymagają zalogowania żeby do nich mieć dostęp
-                więc jak będziecie coś robić co chcecie żeby był dostęp bez logowania
-                to tu trzeba dodać to powinno też działać jak dacie "/**"
-                */
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/register")
                         .permitAll()
-                        // albo wywalcie te 2 linie bo to ustawia że wszystkie inne endpointy wymagają auth
                         .requestMatchers("/admin/**")
                         .hasAnyRole("ADMIN")
                         .anyRequest()
@@ -94,16 +95,10 @@ public class SecurityConfig {
            rozbić to na więcej configów
         */
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("http://localhost:3000");
+        config.setAllowedOrigins(allowedOrigins);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        /*
-            tu określamy do jakich endpointów stosujemy ten config
-            można potem dodać drugi i określić go explicite do czego używamy np.
-            admin config do /admin public config do /public itp
-        */
 
         source.registerCorsConfiguration("/**", config);
         return source;
