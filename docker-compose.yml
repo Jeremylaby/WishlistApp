@@ -5,12 +5,16 @@ services:
     build: ./wishlist-app-frontend
     environment:
       VITE_API_AUTH_URL: ${AUTH_URL}
+      VITE_HOST: 0.0.0.0
     depends_on:
       auth-service:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
     ports:
       - "5173:5173"
+    volumes:
+      - ./wishlist-app-frontend:/app
+      - wishlist-frontend-node-modules:/app/node_modules
 
 
   auth-service:
@@ -27,12 +31,17 @@ services:
 
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f ${AUTH_URL}/healthcheck || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_ALLOWED_ORIGINS: ${SPRING_ALLOWED_ORIGINS}
 
-      AUTH_SERVICE_PORT: 8080
+      AUTH_SERVICE_PORT: ${AUTH_SERVICE_PORT}
 
       AUTH_DB_URL: ${AUTH_DB_DOCKER_URL}
       AUTH_DB_USER: ${AUTH_DB_USER}
@@ -100,3 +109,5 @@ services:
 volumes:
   auth-db-data:
   kafka_kraft:
+  wishlist-frontend-node-modules:
+
