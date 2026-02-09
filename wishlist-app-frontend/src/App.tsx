@@ -11,6 +11,7 @@ function App() {
       <div>
         <a href="https://vite.dev" target="">
           <img src={viteLogo} className="logo" alt="Vite logo" />
+          <div>sex</div>
         </a>
         <a href="https://react.dev" target="">
           <img src={reactLogo} className="logo react test" alt="React logo" />
