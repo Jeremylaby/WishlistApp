@@ -1,6 +1,7 @@
 // src/api/axios.ts
 import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import { type ApiError, type ApiResponse, HttpMethod } from './types.ts';
+import { isAxiosError } from 'axios';
 
 const AUTH_BASE_URL = import.meta.env.VITE_API_AUTH_URL;
 
@@ -55,7 +56,7 @@ export interface ApiErrorBody {
 
 const toErrorResponse = <T = never>(error: unknown): ApiResponse<T> => {
   // sprawdzamy, czy to błąd z axiosa (HTTP, sieć itd.)
-  if (axios.isAxiosError<ApiErrorBody | string>(error)) {
+  if (isAxiosError<ApiErrorBody | string>(error)) {
     const axiosError = error as AxiosError<ApiErrorBody | string>;
     const status = axiosError.response?.status ?? 0;
     const body = axiosError.response?.data;
