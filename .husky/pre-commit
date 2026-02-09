@@ -1,7 +1,15 @@
-git diff --cached --name-only | grep -q "^Auth-Service/" || exit 0
-echo "Uruchamianie Spotless do formatowania kodu Java..."
-cd Auth-Service || exit 1
-./gradlew spotlessApply || exit 1
-cd ..
+if git diff --cached --name-only | grep -q "^Auth-Service/"; then
+    echo "Uruchamianie Spotless do formatowania kodu Java..."
+    cd Auth-Service || exit 1
+    ./gradlew spotlessApply || exit 1
+    cd ..
+fi
+
+if git diff --cached --name-only | grep -q '^wishlist-app-frontend/'; then
+  echo "Uruchamianie lint-staged we frontendzie..."
+  cd wishlist-app-frontend || exit 1
+  npx lint-staged || exit 1
+  cd ..
+fi
 # Dodaj zmiany automatycznie, jeśli coś się zmieniło
 git diff --cached --name-only --diff-filter=ACM| xargs git add
