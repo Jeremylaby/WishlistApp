@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - "Auth-Service/**"
   pull_request:
     branches:
       - main

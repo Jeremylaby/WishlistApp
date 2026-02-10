@@ -1,0 +1,50 @@
+name: WishList build frontend
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "wishlist-app-frontend/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "wishlist-app-frontend/**"
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.11.1]
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        working-directory: wishlist-app-frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: wishlist-app-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint JavaScript/TypeScript
+        run: npm run lint:js
+      - name: Lint CSS/SCSS
+        run: npm run lint:css
+      - name: Lint MD/JSON
+        run: npm run lint:json
+      - name: Build
+        run: npm run build
+      #- name: Run tests
+      #  run: npm test
