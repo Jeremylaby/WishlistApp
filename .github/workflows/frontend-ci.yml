@@ -43,7 +43,7 @@ jobs:
       - name: Lint CSS/SCSS
         run: npm run lint:css
       - name: Lint MD/JSON
-        run: npm lint:json
+        run: npm run lint:json
       - name: Build
         run: npm run build
       #- name: Run tests
